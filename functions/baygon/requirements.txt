@@ -2,4 +2,3 @@ pdfplumber
 pandas
 dateparser
 price_parser
-boto3

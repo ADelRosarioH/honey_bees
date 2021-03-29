@@ -163,6 +163,7 @@ def pdf_to_csv_a(file_path):
 
                     items = items.append(item, ignore_index=True)
 
+            page.close()
             pages.append(items)
 
         pdf.close()

@@ -17,9 +17,8 @@ def lambda_handler(event, context):
     print('{}: {}'.format(bucket, key))
 
     path, ext = os.path.splitext(key)
-    file_name = os.path.basename(key)
 
-    temp = tempfile.NamedTemporaryFile(prefix=os.path.basename(path), suffix=ext)
+    temp = tempfile.NamedTemporaryFile(prefix='{}.'.format(os.path.basename(path)), suffix=ext)
 
     # download
     print('Starting download...')
@@ -46,9 +45,9 @@ def lambda_handler(event, context):
     print('Starting upload...')
     
     try:
-        output_file_name = '{}.csv'.format(os.path.basename(path))
-        response = s3.upload_file(output_file_name, bucket, output)
-    except ClientError as e:
+        output_file_name = '{}.csv'.format(path)
+        response = s3.upload_file(output, bucket, output_file_name)
+    except Exception as e:
         raise e
 
     print('Object uploaded to: {}'.format(output_file_name))
