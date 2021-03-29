@@ -1,9 +1,10 @@
 import os
 import logging
-import utils
 import urllib.parse
 import boto3
 import tempfile
+
+from utils import parser
 
 s3 = boto3.client('s3')
 
@@ -34,4 +35,4 @@ def lambda_handler(event, context):
         logging.error(e)
         raise e
 
-   return True
+    return True

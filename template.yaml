@@ -1,29 +1,24 @@
 AWSTemplateFormatVersion: '2010-09-09'
 Transform: AWS::Serverless-2016-10-31
 Description: >
-  honey-bees
+  honey_bees
 
-  SAM Template for honey-bees
-
-# More info about Globals: https://github.com/awslabs/serverless-application-model/blob/master/docs/globals.rst
-Globals:
-  Function:
-    Timeout: 3
+  SAM Template for honey-bees 
 
 Resources:
 
   RaidFunction:
     Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
     Properties:
-      CodeUri: functions/raid/
-      Handler: app.lambda_handler
+      CodeUri: .
+      Handler: functions.raid.app.lambda_handler
       Runtime: python3.8
       
   BaygonFunction:
     Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
     Properties:
-      CodeUri: functions/baygon/
-      Handler: app.lambda_handler
+      CodeUri: .
+      Handler: functions.baygon.app.lambda_handler
       Runtime: python3.8
 Outputs:
   # ServerlessRestApi is an implicit API created out of Events key under Serverless::Function
