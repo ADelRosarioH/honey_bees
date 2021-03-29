@@ -14,25 +14,43 @@ def lambda_handler(event, context):
     bucket = event['Records'][0]['s3']['bucket']['name']
     key = urllib.parse.unquote_plus(event['Records'][0]['s3']['object']['key'], encoding='utf-8')
     
-    temp = tempfile.NamedTemporaryFile(prefix=key)
-        
-    # download file from s3 to temp
+    print('{}: {}'.format(bucket, key))
+
+    path, ext = os.path.splitext(key)
+    file_name = os.path.basename(key)
+
+    temp = tempfile.NamedTemporaryFile(prefix=os.path.basename(path), suffix=ext)
+
+    # download
+    print('Starting download...')
     try:
         s3.download_file(bucket, key, temp.name)    
     except Exception as e:
-        logging.error('Error getting object {} from bucket {}. Make sure they exist and your bucket is in the same region as this function.'.format(key, bucket))
         raise e
 
-    output = parser.pdf_to_csv_b(temp.name)
+    print('Object saved to: {}'.format(temp.name))
 
-    # upload file from tmp to s3
+    # parse
+    print('Starting parse...')
+
+    output = ''
+
     try:
-        path, ext = os.path.splitext(key)
-        file_name = '{}.csv'.format(path)
-
-        response = s3_client.upload_file(file_name, bucket, output)
-    except ClientError as e:
-        logging.error(e)
+        output = parser.pdf_to_csv_b(temp.name)
+    except Exception as e:
         raise e
 
-    return True
+    print('Object parsed to: {}'.format(output))
+
+    # upload
+    print('Starting upload...')
+    
+    try:
+        output_file_name = '{}.csv'.format(os.path.basename(path))
+        response = s3.upload_file(output_file_name, bucket, output)
+    except ClientError as e:
+        raise e
+
+    print('Object uploaded to: {}'.format(output_file_name))
+
+    return

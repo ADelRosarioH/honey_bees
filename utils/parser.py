@@ -82,8 +82,16 @@ def pdf_to_csv_a(file_path):
     pages = []
 
     with pdfplumber.open(file_path) as pdf:
+        
+        total_pages = len(pdf.pages)
+        page_count = 0
+
 
         for page in pdf.pages:
+            page_count += 1
+
+            print('Parsing {} of {}'.format(page_count, total_pages))
+
             # extract table from every page individually.
             # pdf can have fixed headers and this messes up with
             # the implementation.
