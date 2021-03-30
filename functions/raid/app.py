@@ -32,10 +32,10 @@ def lambda_handler(event, context):
     # parse
     print('Starting parse...')
 
-    output = ''
+    outputs = []
 
     try:
-        output = parser.pdf_to_csv_b(temp.name)
+        outputs = parser.pdf_to_csv_b(temp.name)
     except Exception as e:
         raise e
 
@@ -45,8 +45,10 @@ def lambda_handler(event, context):
     print('Starting upload...')
     
     try:
-        output_file_name = '{}.csv'.format(path)
-        response = s3.upload_file(output, bucket, output_file_name)
+        for output in outputs:
+            output_file_name = '{}{}'.format(os.path.dirname(path), os.path.basename(output))
+            if os.path.exists(output):
+                response = s3.upload_file(output, bucket, output_file_name)
     except Exception as e:
         raise e
 

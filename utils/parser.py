@@ -20,7 +20,7 @@ def get_months(text):
 
 
 def get_days(text):
-    return [digits.replace('-', '') for digits in days_regex.findall(text)]
+    return [digits.replace('-', '').replace('_', '') for digits in days_regex.findall(text)]
 
 
 def get_years(text):
@@ -248,8 +248,14 @@ def pdf_to_csv_b(file_path):
     single_report_pages = []
 
     with pdfplumber.open(file_path) as pdf:
-
+        total_pages = len(pdf.pages)
+        page_count = 0
+        
         for page in pdf.pages:
+            page_count += 1
+
+            print('Parsing {} of {}'.format(page_count, total_pages))
+
             # extract table from every page individually.
             # pdf can have fixed headers and this messes up with
             # the implementation.
@@ -309,6 +315,8 @@ def pdf_to_csv_b(file_path):
                 single_report_page = parse_report(
                     df, name, start_date, end_date)
                 single_report_pages.append(single_report_page)
+            
+            page.close()
 
         pdf.close()
 
@@ -323,4 +331,4 @@ def pdf_to_csv_b(file_path):
     if (len(single_report_pages) >= 1):
         pd.concat(single_report_pages).to_csv(file_output, index=False)
 
-    return file_output
+    return [file_output, generic_file_output, commercial_file_output]
