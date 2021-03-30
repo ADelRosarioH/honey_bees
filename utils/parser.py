@@ -20,7 +20,7 @@ def get_months(text):
 
 
 def get_days(text):
-    return [digits.replace('-', '').replace('_', '') for digits in days_regex.findall(text)]
+    return [digits.replace('-', '').replace('_', '') for digits in days_regex.findall(text.split('.')[0])]
 
 
 def get_years(text):

@@ -39,7 +39,8 @@ def lambda_handler(event, context):
     except Exception as e:
         raise e
 
-    print('Object parsed to: {}'.format(output))
+    for output in outputs:
+        print('Object parsed to: {}'.format(output))
 
     # upload
     print('Starting upload...')
