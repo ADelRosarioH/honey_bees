@@ -232,14 +232,19 @@ def pdf_to_csv_b(file_path):
     generic_file_output = '{}-{}{}'.format(path, 'generic', '.csv')
     commercial_file_output = '{}-{}{}'.format(path, 'commercial', '.csv')
     
+    existing_outputs = []
+
     if os.path.exists(file_output):
-        return file_output
+        existing_outputs.append(file_output)
 
     if os.path.exists(generic_file_output):
-        return file_output
+        existing_outputs.append(generic_file_output)
 
     if os.path.exists(commercial_file_output):
-        return file_output
+        existing_outputs.append(commercial_file_output)
+
+    if (len(existing_outputs) > 0):
+        return existing_outputs
 
     start_date, end_date = get_date_range_from_text(file_path)
     
