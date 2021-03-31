@@ -12,7 +12,7 @@ from dateparser import parse
 months_regex = re.compile(
     r'(enero|febrero|marzo|abril|mayo|junio|julio|agosto|septiembre|octubre|noviembre|diciembre)', re.I)
 days_regex = re.compile(r'[^0-9][0-9]{2}[^0-9]')
-years_regex = re.compile(r'[0-9]{4}')
+years_regex = re.compile(r'20\d{2}')
 
 
 def get_months(text):
@@ -20,7 +20,7 @@ def get_months(text):
 
 
 def get_days(text):
-    return [digits.replace('-', '').replace('_', '') for digits in days_regex.findall(text.split('.')[0])]
+    return [digits.replace('-', '').replace('_', '') for digits in days_regex.findall(text)]
 
 
 def get_years(text):
@@ -33,7 +33,7 @@ def get_from_date(text):
     years = get_years(text)
     month = _get_parsed_month(months[0] if len(months) >= 1 else 1)
     day = days[0] if len(days) >= 1 else 1
-    year = years[0] if len(years) >= 1 else 2017
+    year = years[0] if len(years) >= 1 else 1900
 
     date = datetime.datetime(year=int(year), month=int(month), day=int(day))
     return date
@@ -63,7 +63,8 @@ def get_date_range_from_text(text):
     unquote = urllib.parse.unquote
     text = unquote(unquote(text))
     filename = os.path.basename(text)
-    return [get_from_date(filename), get_to_date(filename)]
+    name, ext = os.path.splitext(filename)
+    return [get_from_date(name), get_to_date(name)]
 
 
 def pdf_to_csv_a(file_path):
