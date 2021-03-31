@@ -47,12 +47,14 @@ def lambda_handler(event, context):
     
     try:
         for output in outputs:
-            output_file_name = '{}{}'.format(os.path.dirname(path), os.path.basename(output))
+            output_file_name = os.path.join(os.path.dirname(path), os.path.basename(output))
+
             if os.path.exists(output):
                 response = s3.upload_file(output, bucket, output_file_name)
+                
+                print('Object uploaded to: {}'.format(output_file_name))
+
     except Exception as e:
         raise e
-
-    print('Object uploaded to: {}'.format(output_file_name))
 
     return

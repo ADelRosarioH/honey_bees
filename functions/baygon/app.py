@@ -47,9 +47,10 @@ def lambda_handler(event, context):
     try:
         output_file_name = '{}.csv'.format(path)
         response = s3.upload_file(output, bucket, output_file_name)
+
+        print('Object uploaded to: {}'.format(output_file_name))
+
     except Exception as e:
         raise e
-
-    print('Object uploaded to: {}'.format(output_file_name))
 
     return
